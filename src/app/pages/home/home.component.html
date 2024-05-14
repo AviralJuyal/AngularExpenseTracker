@@ -8,7 +8,10 @@
 
     <div *ngIf="mainService.allItems.length > 0" class="card">
       <div class="card-body">
-        <app-chart></app-chart>
+        <app-chart
+          [allExpenses]="mainService.allExpenses"
+          [allIncomes]="mainService.allIncomes"
+        ></app-chart>
       </div>
     </div>
     <div class="mt-4" *ngIf="mainService.allItems.length === 0">
