@@ -37,23 +37,23 @@ export class HomeComponent {
 
           this.mainService.allExpenses = [
             ...this.mainService.allExpenses,
-            ...this.data
-              .filter((item: any) => item.type.toLowerCase() === 'expense')
-              .sort(
-                (a: Income, b: Income) =>
-                  new Date(b.date).getTime() - new Date(a.date).getTime()
-              ),
-          ];
+            ...this.data.filter(
+              (item: any) => item.type.toLowerCase() === 'expense'
+            ),
+          ].sort(
+            (a: Income, b: Income) =>
+              new Date(b.date).getTime() - new Date(a.date).getTime()
+          );
 
           this.mainService.allIncomes = [
             ...this.mainService.allIncomes,
-            ...this.data
-              .filter((item: any) => item.type.toLowerCase() === 'income')
-              .sort(
-                (a: Income, b: Income) =>
-                  new Date(b.date).getTime() - new Date(a.date).getTime()
-              ),
-          ];
+            ...this.data.filter(
+              (item: any) => item.type.toLowerCase() === 'income'
+            ),
+          ].sort(
+            (a: Income, b: Income) =>
+              new Date(b.date).getTime() - new Date(a.date).getTime()
+          );
 
           this.mainService.allItems = [
             ...this.mainService.allExpenses,
