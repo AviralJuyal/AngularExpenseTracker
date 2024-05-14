@@ -53,24 +53,67 @@ export class ChartComponent {
           name: 'Expense',
           xValueFormatString: 'MMM DD, YYYY',
           dataPoints: this.allExpenses.map((e) => {
-            return { x: new Date(e.date), y: e.amount };
+            return { x: new Date(e.date), y: +(e.amount ?? 0) };
           }),
-          // dataPoints: [
-          //   { x: new Date(2021, 8, 1), y: 63 },
-
-          // ],
         },
         {
           type: 'line',
           showInLegend: true,
           name: 'Income',
           dataPoints: this.allIncomes.map((e) => {
-            return { x: new Date(e.date), y: e.amount };
+            return { x: new Date(e.date), y: +(e.amount ?? 0) };
           }),
-          // dataPoints: [
-          //   { x: new Date(2021, 8, 1), y: 60 },
-
-          // ],
+        },
+      ],
+    };
+  }
+  ngOnChanges() {
+    this.chartOptions = {
+      animationEnabled: true,
+      theme: 'light2',
+      title: {
+        text: 'Expense vs Income',
+      },
+      axisX: {
+        valueFormatString: 'DD/MM/YYYY',
+      },
+      axisY: {
+        title: '',
+      },
+      toolTip: {
+        shared: true,
+      },
+      legend: {
+        cursor: 'pointer',
+        itemclick: function (e: any) {
+          if (
+            typeof e.dataSeries.visible === 'undefined' ||
+            e.dataSeries.visible
+          ) {
+            e.dataSeries.visible = false;
+          } else {
+            e.dataSeries.visible = true;
+          }
+          e.chart.render();
+        },
+      },
+      data: [
+        {
+          type: 'line',
+          showInLegend: true,
+          name: 'Expense',
+          xValueFormatString: 'MMM DD, YYYY',
+          dataPoints: this.allExpenses.map((e) => {
+            return { x: new Date(e.date), y: +(e.amount ?? 0) };
+          }),
+        },
+        {
+          type: 'line',
+          showInLegend: true,
+          name: 'Income',
+          dataPoints: this.allIncomes.map((e) => {
+            return { x: new Date(e.date), y: +(e.amount ?? 0) };
+          }),
         },
       ],
     };

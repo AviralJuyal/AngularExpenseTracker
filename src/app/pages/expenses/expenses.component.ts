@@ -27,6 +27,7 @@ export class ExpensesComponent {
     'Investments',
     'Salary',
     'BankTransfers',
+    'Travel',
     'Others',
   ];
 
@@ -52,6 +53,9 @@ export class ExpensesComponent {
         break;
       case 'Freelance':
         iconText = 'briefcase';
+        break;
+      case 'Travel':
+        iconText = 'backpack';
         break;
       case 'Investments':
         iconText = 'bank';
@@ -108,7 +112,7 @@ export class ExpensesComponent {
 
   getTotalExpense(): number {
     return this.allexpenses.reduce(
-      (total, expense) => total - (expense.amount ?? 0),
+      (total, expense) => total - +(expense.amount ?? 0),
       0
     );
   }

@@ -26,6 +26,7 @@ export class IncomesComponent {
     'Freelance',
     'Investments',
     'Salary',
+    'Travel',
     'BankTransfers',
     'Others',
   ];
@@ -52,6 +53,9 @@ export class IncomesComponent {
         break;
       case 'Freelance':
         iconText = 'briefcase';
+        break;
+      case 'Travel':
+        iconText = 'backpack';
         break;
       case 'Investments':
         iconText = 'bank';
@@ -108,7 +112,7 @@ export class IncomesComponent {
 
   getTotalIncome(): number {
     return this.allIncomes.reduce(
-      (total, income) => total + (income.amount ?? 0),
+      (total, income) => total + +(income.amount ?? 0),
       0
     );
   }

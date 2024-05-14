@@ -33,9 +33,9 @@ export class PiechartComponent {
             const totals: Record<string, number> = {}; // Explicitly typing the object
             this.data.forEach((expense) => {
               if (totals[expense.option]) {
-                totals[expense.option] += expense.amount ?? 0;
+                totals[expense.option] += +(expense.amount ?? 0);
               } else {
-                totals[expense.option] = expense.amount ?? 0;
+                totals[expense.option] = +(expense.amount ?? 0);
               }
             });
 

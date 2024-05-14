@@ -41,6 +41,10 @@
           </h2>
         </div>
       </div>
+      <div class="card card-body">
+        <p>You can import your data through csv file as well.</p>
+        <input type="file" (change)="onFileChange($event)" accept=".csv" />
+      </div>
     </div>
   </div>
   <!-- Recent history  -->
@@ -55,10 +59,12 @@
         <span>{{ item.title }}</span>
         <span
           [ngStyle]="{
-            color: item.type === 'expense' ? 'rgb(209, 5, 5)' : 'green'
+            color:
+              item.type.toLowerCase() === 'expense' ? 'rgb(209, 5, 5)' : 'green'
           }"
           ><i class="bi bi-currency-rupee"></i
-          ><span *ngIf="item.type === 'expense'">-</span>{{ item.amount }}</span
+          ><span *ngIf="item.type.toLowerCase() === 'expense'">-</span
+          >{{ item.amount }}</span
         >
       </div>
     </div>
