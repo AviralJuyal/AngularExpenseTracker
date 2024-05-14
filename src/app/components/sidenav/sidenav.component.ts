@@ -7,12 +7,9 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
   styleUrl: './sidenav.component.scss',
 })
 export class SidenavComponent {
-  constructor(private router: Router, private route: ActivatedRoute) {
-    console.log(this.getCurrPath());
-  }
+  constructor(private router: Router) {}
 
   navigateFunc(path: string) {
-    console.log(this.getCurrPath());
     this.router.navigateByUrl(path);
   }
 
