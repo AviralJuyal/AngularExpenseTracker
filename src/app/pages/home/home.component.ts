@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Expense } from '../../models/expense';
 import { Income } from '../../models/income';
 import * as Papa from 'papaparse';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,7 @@ export class HomeComponent {
 
   allItems: Income[] = [];
 
-  constructor() {}
+  constructor(private toastr: ToastrService) {}
 
   data: any;
 
@@ -69,47 +70,55 @@ export class HomeComponent {
       reader.readAsText(file);
 
       reader.onload = () => {
-        const csvData = reader.result;
-        const parsedData = Papa.parse(csvData as string, {
-          header: true,
-          skipEmptyLines: true,
-        });
+        try {
+          const csvData = reader.result;
+          const parsedData = Papa.parse(csvData as string, {
+            header: true,
+            skipEmptyLines: true,
+          });
 
-        this.data = parsedData.data;
+          this.data = parsedData.data;
 
-        this.allExpenses = [
-          ...this.allExpenses,
-          ...this.data
-            .filter((item: any) => item.type.toLowerCase() === 'expense')
+          this.allExpenses = [
+            ...this.allExpenses,
+            ...this.data
+              .filter((item: any) => item.type.toLowerCase() === 'expense')
+              .sort(
+                (a: Income, b: Income) =>
+                  new Date(b.date).getTime() - new Date(a.date).getTime()
+              ),
+          ];
+
+          this.allIncomes = [
+            ...this.allIncomes,
+            ...this.data
+              .filter((item: any) => item.type.toLowerCase() === 'income')
+              .sort(
+                (a: Income, b: Income) =>
+                  new Date(b.date).getTime() - new Date(a.date).getTime()
+              ),
+          ];
+
+          this.allItems = [...this.allExpenses, ...this.allIncomes];
+          this.allItems
             .sort(
-              (a: Income, b: Income) =>
-                new Date(b.date).getTime() - new Date(a.date).getTime()
-            ),
-        ];
+              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+            )
+            .splice(5);
 
-        this.allIncomes = [
-          ...this.allIncomes,
-          ...this.data
-            .filter((item: any) => item.type.toLowerCase() === 'income')
-            .sort(
-              (a: Income, b: Income) =>
-                new Date(b.date).getTime() - new Date(a.date).getTime()
-            ),
-        ];
-
-        this.allItems = [...this.allExpenses, ...this.allIncomes];
-        this.allItems
-          .sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-          )
-          .splice(5);
-
-        localStorage.setItem('allExpenses', JSON.stringify(this.allExpenses));
-        localStorage.setItem('allIncomes', JSON.stringify(this.allIncomes));
+          localStorage.setItem('allExpenses', JSON.stringify(this.allExpenses));
+          localStorage.setItem('allIncomes', JSON.stringify(this.allIncomes));
+          this.toastr.success('Data loaded successfully');
+        } catch (error) {
+          this.toastr.error(
+            'Invalid file you should include "id, title, amount, date, option, type and notes(optional)"'
+          );
+        }
       };
 
       reader.onerror = (error) => {
         console.error('Error occurred while reading file:', error);
+        this.toastr.error('Error occurred while reading file');
       };
     }
   }
