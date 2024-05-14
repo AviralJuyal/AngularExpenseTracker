@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Expense } from '../../models/expense';
+import { MainService } from '../../services/main.service';
 
 @Component({
   selector: 'app-expenses',
@@ -8,8 +9,6 @@ import { Expense } from '../../models/expense';
   styleUrl: './expenses.component.scss',
 })
 export class ExpensesComponent {
-  totalexpense: number = 4000;
-
   expenseDetail: Expense = {
     id: 0,
     title: '',
@@ -31,15 +30,13 @@ export class ExpensesComponent {
     'Others',
   ];
 
-  allexpenses: Expense[] = [];
-
-  constructor(private toastr: ToastrService) {}
+  constructor(private toastr: ToastrService, public mainService: MainService) {}
 
   ngOnInit() {
-    const data = localStorage.getItem('allExpenses');
-    if (data) {
-      this.allexpenses = JSON.parse(data);
-    }
+    // const data = localStorage.getItem('allExpenses');
+    // if (data) {
+    //   this.mainService.allExpenses = JSON.parse(data);
+    // }
   }
 
   getIconName(option: string): string {
@@ -84,9 +81,9 @@ export class ExpensesComponent {
       this.toastr.error('Please enter all details');
       return;
     } else {
-      this.allexpenses.push({
+      this.mainService.allExpenses.push({
         ...this.expenseDetail,
-        id: this.allexpenses.length,
+        id: this.mainService.allExpenses.length,
       });
       this.toastr.success('Expense added successfully !');
       this.expenseDetail = {
@@ -99,21 +96,32 @@ export class ExpensesComponent {
         type: 'expense',
       };
 
-      localStorage.setItem('allExpenses', JSON.stringify(this.allexpenses));
+      this.mainService.allItems = [
+        ...this.mainService.allExpenses,
+        ...this.mainService.allIncomes,
+      ];
+      localStorage.setItem(
+        'allExpenses',
+        JSON.stringify(this.mainService.allExpenses)
+      );
     }
   }
 
   deleteExpense(id: number) {
     this.toastr.clear();
-    this.allexpenses = this.allexpenses.filter((expense) => expense.id !== id);
+    this.mainService.allExpenses = this.mainService.allExpenses.filter(
+      (expense) => expense.id !== id
+    );
     this.toastr.success('Expense deleted successfully !');
-    localStorage.setItem('allExpenses', JSON.stringify(this.allexpenses));
-  }
 
-  getTotalExpense(): number {
-    return this.allexpenses.reduce(
-      (total, expense) => total - +(expense.amount ?? 0),
-      0
+    this.mainService.allItems = [
+      ...this.mainService.allExpenses,
+      ...this.mainService.allIncomes,
+    ];
+
+    localStorage.setItem(
+      'allExpenses',
+      JSON.stringify(this.mainService.allExpenses)
     );
   }
 }

@@ -3,6 +3,7 @@ import { Expense } from '../../models/expense';
 import { Income } from '../../models/income';
 import * as Papa from 'papaparse';
 import { ToastrService } from 'ngx-toastr';
+import { MainService } from '../../services/main.service';
 
 @Component({
   selector: 'app-home',
@@ -10,56 +11,11 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
-  allExpenses: Expense[] = [];
-  allIncomes: Income[] = [];
-
-  allItems: Income[] = [];
-
-  constructor(private toastr: ToastrService) {}
+  constructor(private toastr: ToastrService, public mainService: MainService) {}
 
   data: any;
 
-  ngOnInit() {
-    let expData = localStorage.getItem('allExpenses');
-    let incomeData = localStorage.getItem('allIncomes');
-    if (expData) {
-      this.allExpenses = JSON.parse(expData);
-      // Sort expenses by date in descending order
-      this.allExpenses.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
-    }
-    if (incomeData) {
-      this.allIncomes = JSON.parse(incomeData);
-      // Sort incomes by date in descending order
-      this.allIncomes.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
-    }
-
-    this.allItems = [...this.allExpenses, ...this.allIncomes];
-    this.allItems
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .splice(5);
-  }
-
-  getTotalIncome() {
-    return this.allIncomes.reduce(
-      (total, income) => total + +(income.amount ?? 0),
-      0
-    );
-  }
-
-  getTotalExpense() {
-    return this.allExpenses.reduce(
-      (total, expense) => total + +(expense.amount ?? 0),
-      0
-    );
-  }
-
-  getTotalBalance() {
-    return this.getTotalIncome() - this.getTotalExpense();
-  }
+  ngOnInit() {}
 
   onFileChange(event: any) {
     let reader = new FileReader();
@@ -79,8 +35,8 @@ export class HomeComponent {
 
           this.data = parsedData.data;
 
-          this.allExpenses = [
-            ...this.allExpenses,
+          this.mainService.allExpenses = [
+            ...this.mainService.allExpenses,
             ...this.data
               .filter((item: any) => item.type.toLowerCase() === 'expense')
               .sort(
@@ -89,8 +45,8 @@ export class HomeComponent {
               ),
           ];
 
-          this.allIncomes = [
-            ...this.allIncomes,
+          this.mainService.allIncomes = [
+            ...this.mainService.allIncomes,
             ...this.data
               .filter((item: any) => item.type.toLowerCase() === 'income')
               .sort(
@@ -99,15 +55,24 @@ export class HomeComponent {
               ),
           ];
 
-          this.allItems = [...this.allExpenses, ...this.allIncomes];
-          this.allItems
+          this.mainService.allItems = [
+            ...this.mainService.allExpenses,
+            ...this.mainService.allIncomes,
+          ];
+          this.mainService.allItems
             .sort(
               (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
             )
             .splice(5);
 
-          localStorage.setItem('allExpenses', JSON.stringify(this.allExpenses));
-          localStorage.setItem('allIncomes', JSON.stringify(this.allIncomes));
+          localStorage.setItem(
+            'allExpenses',
+            JSON.stringify(this.mainService.allExpenses)
+          );
+          localStorage.setItem(
+            'allIncomes',
+            JSON.stringify(this.mainService.allIncomes)
+          );
           this.toastr.success('Data loaded successfully');
         } catch (error) {
           this.toastr.error(

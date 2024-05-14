@@ -6,7 +6,7 @@
   >
     <h3>Total Expense :</h3>
     <p class="h2 ms-2" style="color: rgb(209, 5, 5)">
-      <i class="bi bi-currency-rupee"></i> {{ getTotalExpense() }}
+      <i class="bi bi-currency-rupee"></i> {{ mainService.getTotalExpense() }}
     </p>
   </div>
 
@@ -76,7 +76,7 @@
 
     <!-- All expense sources  -->
     <div class="container">
-      @for (expense of allexpenses; track $index) {
+      @for (expense of mainService.allExpenses; track $index) {
       <div class="card mb-2">
         <div class="card-body d-flex w-100 flex-fill">
           <div class="me-4">

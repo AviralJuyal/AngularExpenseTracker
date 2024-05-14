@@ -5,28 +5,32 @@
   <!-- All transactions -->
   <div class="w-100">
     <h1>All Transactions</h1>
-    <div *ngIf="allItems.length > 0" class="card">
+
+    <div *ngIf="mainService.allItems.length > 0" class="card">
       <div class="card-body">
-        <app-chart
-          [allExpenses]="allExpenses"
-          [allIncomes]="allIncomes"
-        ></app-chart>
+        <app-chart></app-chart>
       </div>
     </div>
-    <div class="mt-4" *ngIf="allItems.length === 0">
+    <div class="mt-4" *ngIf="mainService.allItems.length === 0">
       <h4>Add incomes and expenses to view chart</h4>
     </div>
     <div class="d-flex flex-wrap gap-4 mt-4">
       <div class="card" style="width: 250px; text-align: center">
         <div class="card-body">
           <h2>Total Income</h2>
-          <h2><i class="bi bi-currency-rupee"></i>{{ getTotalIncome() }}</h2>
+          <h2>
+            <i class="bi bi-currency-rupee"></i
+            >{{ mainService.getTotalIncome() }}
+          </h2>
         </div>
       </div>
       <div class="card" style="width: 250px; text-align: center">
         <div class="card-body">
           <h2>Total Expense</h2>
-          <h2><i class="bi bi-currency-rupee"></i>{{ getTotalExpense() }}</h2>
+          <h2>
+            <i class="bi bi-currency-rupee"></i
+            >{{ mainService.getTotalExpense() }}
+          </h2>
         </div>
       </div>
       <div class="card" style="width: 250px; text-align: center">
@@ -34,10 +38,12 @@
           <h2>Total Balance</h2>
           <h2
             [ngStyle]="{
-              color: getTotalBalance() < 0 ? 'rgb(209, 5, 5)' : 'green'
+              color:
+                mainService.getTotalBalance() < 0 ? 'rgb(209, 5, 5)' : 'green'
             }"
           >
-            <i class="bi bi-currency-rupee"></i>{{ getTotalBalance() }}
+            <i class="bi bi-currency-rupee"></i
+            >{{ mainService.getTotalBalance() }}
           </h2>
         </div>
       </div>
@@ -50,7 +56,7 @@
   <!-- Recent history  -->
   <div style="width: 50%">
     <h2>Recent history</h2>
-    @for (item of allItems; track $index) {
+    @for (item of mainService.allItems; track $index) {
 
     <div class="card mb-2">
       <div
@@ -75,21 +81,21 @@
 </div>
 
 @defer (on viewport){
-<div *ngIf="allExpenses.length > 0">
+<div *ngIf="mainService.allExpenses.length > 0">
   <app-piechart
     [title]="'Expense report'"
-    [data]="allExpenses"
-    [totalData]="getTotalExpense()"
+    [data]="mainService.allExpenses"
+    [totalData]="mainService.getTotalExpense()"
   ></app-piechart>
 </div>
 } @placeholder (minimum 100ms) {
 <p>Loading...</p>
 } @defer (on viewport){
-<div *ngIf="allIncomes.length > 0" class="mt-4">
+<div *ngIf="mainService.allIncomes.length > 0" class="mt-4">
   <app-piechart
     [title]="'Income report'"
-    [data]="allIncomes"
-    [totalData]="getTotalIncome()"
+    [data]="mainService.allIncomes"
+    [totalData]="mainService.getTotalIncome()"
   ></app-piechart>
 </div>
 } @placeholder (minimum 100ms) {

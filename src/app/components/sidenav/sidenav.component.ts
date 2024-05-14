@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
+import { MainService } from '../../services/main.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -7,7 +8,7 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
   styleUrl: './sidenav.component.scss',
 })
 export class SidenavComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, public mainService: MainService) {}
 
   navigateFunc(path: string) {
     this.router.navigateByUrl(path);
@@ -19,6 +20,8 @@ export class SidenavComponent {
 
   clearData() {
     localStorage.clear();
-    window.location.reload();
+    this.mainService.allExpenses = [];
+    this.mainService.allIncomes = [];
+    this.mainService.allItems = [];
   }
 }

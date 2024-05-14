@@ -6,7 +6,7 @@
   >
     <h3>Total Income :</h3>
     <p class="h2 ms-2" style="color: rgb(71, 139, 3)">
-      <i class="bi bi-currency-rupee"></i> {{ getTotalIncome() }}
+      <i class="bi bi-currency-rupee"></i> {{ mainService.getTotalIncome() }}
     </p>
   </div>
 
@@ -76,7 +76,7 @@
 
     <!-- All income sources  -->
     <div class="container">
-      @for (income of allIncomes; track $index) {
+      @for (income of mainService.allIncomes; track $index) {
       <div class="card mb-2">
         <div class="card-body d-flex w-100 flex-fill">
           <div class="me-4">

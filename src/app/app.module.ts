@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
-import { NavbarComponent } from './components/navbar/navbar.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginModalComponent } from './components/login-modal/login-modal.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -25,7 +24,6 @@ import { PiechartComponent } from './components/piechart/piechart.component';
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
     HomeComponent,
     LoginModalComponent,
     SidenavComponent,

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Income } from '../../models/income';
 import { ToastrService } from 'ngx-toastr';
+import { MainService } from '../../services/main.service';
 
 @Component({
   selector: 'app-incomes',
@@ -8,8 +9,6 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './incomes.component.scss',
 })
 export class IncomesComponent {
-  totalIncome: number = 4000;
-
   incomeDetail: Income = {
     id: 0,
     title: '',
@@ -31,15 +30,13 @@ export class IncomesComponent {
     'Others',
   ];
 
-  allIncomes: Income[] = [];
-
-  constructor(private toastr: ToastrService) {}
+  constructor(private toastr: ToastrService, public mainService: MainService) {}
 
   ngOnInit() {
-    const data = localStorage.getItem('allIncomes');
-    if (data) {
-      this.allIncomes = JSON.parse(data);
-    }
+    // const data = localStorage.getItem('allIncomes');
+    // if (data) {
+    //   this.allIncomes = JSON.parse(data);
+    // }
   }
 
   getIconName(option: string): string {
@@ -84,9 +81,9 @@ export class IncomesComponent {
       this.toastr.error('Please enter all details');
       return;
     } else {
-      this.allIncomes.push({
+      this.mainService.allIncomes.push({
         ...this.incomeDetail,
-        id: this.allIncomes.length,
+        id: this.mainService.allIncomes.length,
       });
       this.toastr.success('Income added successfully !');
       this.incomeDetail = {
@@ -99,21 +96,33 @@ export class IncomesComponent {
         type: 'income',
       };
 
-      localStorage.setItem('allIncomes', JSON.stringify(this.allIncomes));
+      this.mainService.allItems = [
+        ...this.mainService.allExpenses,
+        ...this.mainService.allIncomes,
+      ];
+
+      localStorage.setItem(
+        'allIncomes',
+        JSON.stringify(this.mainService.allIncomes)
+      );
     }
   }
 
   deleteIncome(id: number) {
     this.toastr.clear();
-    this.allIncomes = this.allIncomes.filter((income) => income.id !== id);
-    this.toastr.success('Income deleted successfully !');
-    localStorage.setItem('allIncomes', JSON.stringify(this.allIncomes));
-  }
+    this.mainService.allIncomes = this.mainService.allIncomes.filter(
+      (income) => income.id !== id
+    );
 
-  getTotalIncome(): number {
-    return this.allIncomes.reduce(
-      (total, income) => total + +(income.amount ?? 0),
-      0
+    this.toastr.success('Income deleted successfully !');
+
+    this.mainService.allItems = [
+      ...this.mainService.allExpenses,
+      ...this.mainService.allIncomes,
+    ];
+    localStorage.setItem(
+      'allIncomes',
+      JSON.stringify(this.mainService.allIncomes)
     );
   }
 }
